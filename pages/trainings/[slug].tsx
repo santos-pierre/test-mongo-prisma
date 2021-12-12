@@ -1,8 +1,7 @@
-import { Training } from '@prisma/client';
+import { PrismaClient, Training } from '@prisma/client';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import AppLayout from '../../components/layouts/AppLayout';
 import Heading2 from '../../components/ui/Heading2';
-import prisma from '../../lib/prisma';
 
 type TrainingPageProps = {
     training: Training;
@@ -22,6 +21,7 @@ const TrainingPage: React.FC<TrainingPageProps> = ({ training }) => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
+    const prisma = new PrismaClient();
     if (params) {
         const training = await prisma.training.findFirst({
             where: {
@@ -43,6 +43,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
+    const prisma = new PrismaClient();
     const trainingsSlug = await prisma.training.findMany({
         select: {
             slug: true,
